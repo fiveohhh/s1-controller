@@ -77,12 +77,12 @@ class S1:
             if len(onstby_led_history) == 20:
                 if sum(onstby_led_history) == 0:
                     if self.machineState != MachineState.ON:
-                        logger.info("Machine turned off")
+                        logger.info("Machine turned on")
                         self.machineState = MachineState.ON
                         self.startTime = datetime.now()
                 else:
                     if self.machineState != MachineState.OFF:
-                        logger.info("Machine turned on")
+                        logger.info("Machine turned of")
                         self.machineState = MachineState.OFF
                         self.startTime = None
 
