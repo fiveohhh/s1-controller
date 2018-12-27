@@ -48,28 +48,6 @@ F 3 "http://www.soselectronic.cz/a_info/resource/d/pc817.pdf" H 3050 4000 50  00
 	1    0    0    -1  
 $EndComp
 $Comp
-L Isolator:PC817 1_BTN1
-U 1 1 5C112919
-P 3100 4700
-F 0 "1_BTN1" H 3100 5025 50  0000 C CNN
-F 1 "PC817" H 3100 4934 50  0000 C CNN
-F 2 "Package_DIP:DIP-4_W7.62mm" H 2900 4500 50  0001 L CIN
-F 3 "http://www.soselectronic.cz/a_info/resource/d/pc817.pdf" H 3100 4700 50  0001 L CNN
-	1    3100 4700
-	1    0    0    -1  
-$EndComp
-$Comp
-L Isolator:PC817 2_BTN1
-U 1 1 5C112963
-P 3100 5400
-F 0 "2_BTN1" H 3100 5725 50  0000 C CNN
-F 1 "PC817" H 3100 5634 50  0000 C CNN
-F 2 "Package_DIP:DIP-4_W7.62mm" H 2900 5200 50  0001 L CIN
-F 3 "http://www.soselectronic.cz/a_info/resource/d/pc817.pdf" H 3100 5400 50  0001 L CNN
-	1    3100 5400
-	1    0    0    -1  
-$EndComp
-$Comp
 L Connector:Screw_Terminal_01x08 J1
 U 1 1 5C112B1E
 P 1450 2600
@@ -92,15 +70,6 @@ F 3 "" H 4100 1800 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	2750 1800 1650 1800
-Wire Wire Line
-	2700 2250 1650 2250
-Wire Wire Line
-	1650 1800 1650 2250
-Connection ~ 1650 2250
-Wire Wire Line
-	1650 2250 1650 2300
-Wire Wire Line
 	3350 1800 3750 1800
 Wire Wire Line
 	3300 2450 3750 2450
@@ -120,8 +89,6 @@ F 3 "https://www.raspberrypi.org/documentation/hardware/raspberrypi/schematics/r
 	1    5950 3150
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	1650 2450 1650 2500
 Wire Wire Line
 	2750 1600 2400 1600
 Wire Wire Line
@@ -147,14 +114,6 @@ Wire Wire Line
 	4900 1500 7000 1500
 Wire Wire Line
 	7000 1500 7000 3050
-Wire Wire Line
-	2800 2600 2800 3050
-Wire Wire Line
-	2350 2600 2350 2700
-Wire Wire Line
-	2350 3900 2500 3900
-Wire Wire Line
-	2350 2600 2800 2600
 $Comp
 L Device:R_US R3
 U 1 1 5C11973B
@@ -211,100 +170,29 @@ Wire Wire Line
 	1800 3600 1800 4100
 Wire Wire Line
 	1800 4100 2750 4100
-$Comp
-L Device:R_US R4
-U 1 1 5C11B502
-P 2150 4350
-F 0 "R4" H 2218 4396 50  0000 L CNN
-F 1 "R_US" H 2218 4305 50  0000 L CNN
-F 2 "Resistor_SMD:R_0805_2012Metric" V 2190 4340 50  0001 C CNN
-F 3 "~" H 2150 4350 50  0001 C CNN
-	1    2150 4350
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R_US R2
-U 1 1 5C11B562
-P 2000 5000
-F 0 "R2" H 2068 5046 50  0000 L CNN
-F 1 "R_US" H 2068 4955 50  0000 L CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 2040 4990 50  0001 C CNN
-F 3 "~" H 2000 5000 50  0001 C CNN
-	1    2000 5000
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	1950 4200 2150 4200
-Wire Wire Line
-	2150 4500 2150 4800
-Wire Wire Line
-	2150 4800 2800 4800
-Wire Wire Line
-	2000 5150 2000 5500
-Wire Wire Line
-	2000 5500 2800 5500
-Wire Wire Line
-	2000 4850 1650 4850
-Wire Wire Line
-	1650 4850 1650 3000
-Wire Wire Line
-	2800 4600 2500 4600
-Wire Wire Line
-	2500 4600 2500 3900
-Connection ~ 2500 3900
-Wire Wire Line
-	2500 3900 2750 3900
-Wire Wire Line
-	2800 5300 2500 5300
-Wire Wire Line
-	2500 5300 2500 4600
-Connection ~ 2500 4600
 Wire Wire Line
 	3750 2450 3750 3250
 Wire Wire Line
 	3750 3250 3400 3250
 Connection ~ 3750 2450
 Wire Wire Line
-	3750 3250 3750 4100
+	3750 3250 3750 3300
 Wire Wire Line
 	3750 4100 3350 4100
 Connection ~ 3750 3250
-Wire Wire Line
-	3750 4100 3750 4800
-Wire Wire Line
-	3750 4800 3400 4800
 Connection ~ 3750 4100
-Wire Wire Line
-	3750 4800 3750 5000
-Wire Wire Line
-	3750 5450 3400 5450
-Wire Wire Line
-	3400 5450 3400 5500
-Connection ~ 3750 4800
-Wire Wire Line
-	6750 2850 7150 2850
-Wire Wire Line
-	7150 2850 7150 5300
-Wire Wire Line
-	7150 5300 3400 5300
 Wire Wire Line
 	5150 2650 4800 2650
 Wire Wire Line
 	4800 2650 4800 3000
 Wire Wire Line
-	4800 3000 3400 3000
+	4800 3000 4000 3000
 Wire Wire Line
 	3400 3000 3400 3050
 Wire Wire Line
-	5150 3850 3350 3850
+	5150 3850 4000 3850
 Wire Wire Line
 	3350 3850 3350 3900
-Wire Wire Line
-	3400 4600 4800 4600
-Wire Wire Line
-	4800 4600 4800 3350
-Wire Wire Line
-	4800 3350 5150 3350
 Wire Wire Line
 	6750 3050 7000 3050
 Wire Wire Line
@@ -316,29 +204,85 @@ Wire Wire Line
 Wire Wire Line
 	1650 2900 2050 2900
 Wire Wire Line
-	2400 2450 1650 2450
-Wire Wire Line
-	2400 1600 2400 2450
-Wire Wire Line
-	1650 2600 1950 2600
-Wire Wire Line
 	2700 2450 2550 2450
 Wire Wire Line
-	2550 2450 2550 2400
-Wire Wire Line
-	2550 2400 1650 2400
-Wire Wire Line
-	1950 2600 1950 4200
-Wire Wire Line
 	2350 2700 1650 2700
-Connection ~ 2350 2700
 Wire Wire Line
-	2350 2700 2350 3900
+	2350 2700 2350 3050
 Wire Wire Line
 	5950 4450 5950 5000
 Wire Wire Line
-	5950 5000 3750 5000
-Connection ~ 3750 5000
+	5650 4450 5650 5000
+Connection ~ 5650 5000
 Wire Wire Line
-	3750 5000 3750 5450
+	3750 5000 5650 5000
+Wire Wire Line
+	5650 5000 5950 5000
+Wire Wire Line
+	1650 2500 2150 2500
+Wire Wire Line
+	2150 2500 2150 1800
+Wire Wire Line
+	2150 1800 2750 1800
+Wire Wire Line
+	3750 4100 3750 4150
+Wire Wire Line
+	2550 2300 1650 2300
+Wire Wire Line
+	2550 2300 2550 2450
+Wire Wire Line
+	1650 2400 2000 2400
+Wire Wire Line
+	2000 2400 2000 2250
+Wire Wire Line
+	2000 2250 2700 2250
+$Comp
+L Device:C C1
+U 1 1 5C25DA5E
+P 4000 3150
+F 0 "C1" H 4115 3196 50  0000 L CNN
+F 1 "C" H 4115 3105 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 4038 3000 50  0001 C CNN
+F 3 "~" H 4000 3150 50  0001 C CNN
+	1    4000 3150
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C2
+U 1 1 5C25DAD0
+P 4000 4000
+F 0 "C2" H 4115 4046 50  0000 L CNN
+F 1 "C" H 4115 3955 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric" H 4038 3850 50  0001 C CNN
+F 3 "~" H 4000 4000 50  0001 C CNN
+	1    4000 4000
+	1    0    0    -1  
+$EndComp
+Connection ~ 4000 3850
+Wire Wire Line
+	4000 3850 3350 3850
+Wire Wire Line
+	4000 4150 3750 4150
+Connection ~ 3750 4150
+Wire Wire Line
+	3750 4150 3750 5000
+Connection ~ 4000 3000
+Wire Wire Line
+	4000 3000 3400 3000
+Wire Wire Line
+	4000 3300 3750 3300
+Connection ~ 3750 3300
+Wire Wire Line
+	3750 3300 3750 4100
+Wire Wire Line
+	2350 3900 2750 3900
+Wire Wire Line
+	2800 3050 2350 3050
+Connection ~ 2350 3050
+Wire Wire Line
+	2350 3050 2350 3900
+Wire Wire Line
+	1650 2600 2400 2600
+Wire Wire Line
+	2400 1600 2400 2600
 $EndSCHEMATC
