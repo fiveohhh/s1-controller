@@ -68,8 +68,9 @@ class S1:
             onstby_led_history.append(GPIO.input(ON_STBY_LED))
             # logger.info("on stby history: {}".format(onstby_led_history))
             if sum(onstby_led_history) == 0:
-                self.machineState = MachineState.ON
-                self.startTime = datetime.now()
+                if self.machineState != MachineState.ON:
+                    self.machineState = MachineState.ON
+                    self.startTime = datetime.now()
             else:
                 self.machineState = MachineState.OFF
                 self.startTime = None
@@ -78,7 +79,7 @@ class S1:
             logger.info("boiler history: {}".format(boiler_led_history))
             if sum(boiler_led_history) == 0:
                 self.boilerState = BoilerState.ON_TO_TEMP
-            elif sum(boiler_led_history) < 30:
+            elif sum(boiler_led_history) < 20:
 
                 self.boilerState = BoilerState.ON_NOT_TO_TEMP
             else:
@@ -95,7 +96,7 @@ class S1:
             time.sleep(3.5)
             GPIO.output(ON_OFF_BTN, GPIO.LOW)
 
-        if boilerState == boilerState.OFF:
+        if boilerState == BoilerState.OFF:
             time.sleep(2)
             # power off boiler
             GPIO.output(BOILER_BTN, GPIO.HIGH)
