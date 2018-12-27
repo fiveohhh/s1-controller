@@ -82,7 +82,7 @@ class S1:
                         self.startTime = datetime.now()
                 else:
                     if self.machineState != MachineState.OFF:
-                        logger.info("Machine turned of")
+                        logger.info("Machine turned off")
                         self.machineState = MachineState.OFF
                         self.startTime = None
 
