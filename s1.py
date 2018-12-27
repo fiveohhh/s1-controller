@@ -14,6 +14,13 @@ from datetime import datetime
 logger = logging.getLogger(__name__)
 handler = RotatingFileHandler("s1-logs.log", maxBytes=2000000, backupCount=2)
 logger.addHandler(handler)
+
+formatter = logging.Formatter(
+    fmt="%(asctime)s %(levelname)-8s %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+)
+
+handler.setFormatter(formatter)
+
 logger.setLevel(logging.INFO)
 
 
@@ -69,21 +76,29 @@ class S1:
             # logger.info("on stby history: {}".format(onstby_led_history))
             if sum(onstby_led_history) == 0:
                 if self.machineState != MachineState.ON:
+                    logger.debug("Machine turned off")
                     self.machineState = MachineState.ON
                     self.startTime = datetime.now()
             else:
-                self.machineState = MachineState.OFF
-                self.startTime = None
+                if self.machineState != MachineState.OFF:
+                    logger.debug("Machine turned on")
+                    self.machineState = MachineState.OFF
+                    self.startTime = None
 
             boiler_led_history.append(GPIO.input(BOILER_LED))
             logger.info("boiler history: {}".format(boiler_led_history))
             if sum(boiler_led_history) == 0:
-                self.boilerState = BoilerState.ON_TO_TEMP
+                if self.boilerState != BoilerState.ON_TO_TEMP:
+                    logger.debug("Boiler to temp")
+                    self.boilerState = BoilerState.ON_TO_TEMP
             elif sum(boiler_led_history) < 20:
-
-                self.boilerState = BoilerState.ON_NOT_TO_TEMP
+                if self.boilerState != BoilerState.ON_NOT_TO_TEMP:
+                    logger.debug("Boiler heating")
+                    self.boilerState = BoilerState.ON_NOT_TO_TEMP
             else:
-                self.boilerState = BoilerState.OFF
+                if self.boilerState != BoilerState.OFF:
+                    logger.debug("Boiler turned on")
+                    self.boilerState = BoilerState.OFF
 
             # check and update things
             time.sleep(0.1)
@@ -91,27 +106,31 @@ class S1:
         self._running = False
 
     def powerOn(self, boilerState=1):
+        logger.debug("Turning machine on")
         if self.machineState == MachineState.OFF:
             GPIO.output(ON_OFF_BTN, GPIO.HIGH)
             time.sleep(3.5)
             GPIO.output(ON_OFF_BTN, GPIO.LOW)
 
-        if boilerState == BoilerState.OFF:
-            time.sleep(2)
-            # power off boiler
-            GPIO.output(BOILER_BTN, GPIO.HIGH)
-            time.sleep(0.25)
-            GPIO.output(BOILER_BTN, GPIO.LOW)
+            if boilerState == BoilerState.OFF:
+                logger.debug("Turning boiler off")
+                time.sleep(2)
+                # power off boiler
+                GPIO.output(BOILER_BTN, GPIO.HIGH)
+                time.sleep(0.25)
+                GPIO.output(BOILER_BTN, GPIO.LOW)
 
     def setBoiler(self, boilerState):
         if (boilerState == 1 and self.boilerState == BoilerState.OFF) or (
             boilerState == 0 and self.boilerState != BoilerState.OFF
         ):
+            logger.debug("Toggling boiler state")
             GPIO.output(BOILER_BTN, GPIO.HIGH)
             time.sleep(0.25)
             GPIO.output(BOILER_BTN, GPIO.LOW)
 
     def powerOff(self):
+        logger.debug("Powering off")
         GPIO.output(ON_OFF_BTN, GPIO.HIGH)
         time.sleep(0.25)
         GPIO.output(ON_OFF_BTN, GPIO.LOW)
