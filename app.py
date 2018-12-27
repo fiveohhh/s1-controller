@@ -4,12 +4,13 @@ from s1 import S1, BoilerState, MachineState
 
 from datetime import datetime
 import json
+
 app = Flask(__name__)
 
 s1 = S1()
 
 
-@app.route("/vivaldi/cmds", methods = ['POST'])
+@app.route("/vivaldi/cmds", methods=["POST"])
 def cmd():
     if request.json["cmd"] == "on":
         if request.json["boiler"] == "off":
@@ -32,9 +33,11 @@ def state():
 
     return json.dumps(state)
 
+
 def main():
     s1.start()
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host="0.0.0.0")
+
 
 if __name__ == "__main__":
-        main()
+    main()
