@@ -20,6 +20,11 @@ def cmd():
                 s1.powerOn()
         elif request.json["cmd"] == "off":
             s1.powerOff()
+        elif request.json["cmd"] == "setboiler":
+            if "state" in request.json and request.json["state"].lower() == "off":
+                s1.setBoiler(0)
+            else:
+                s1.setBoiler(1)
         elif request.json["cmd"] == "autoOffMinutes":
             if "time" in request.json:
                 s1.autoOffTimeSeconds = int(request.json["time"]) * 60
