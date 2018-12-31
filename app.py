@@ -12,17 +12,23 @@ s1 = S1()
 
 @app.route("/vivaldi/cmds", methods=["POST"])
 def cmd():
-    if request.json["cmd"] == "on":
-        if request.json["boiler"] == "off":
-            s1.powerOn(boilerState=BoilerState.OFF)
-        else:
-            s1.powerOn()
-    elif request.json["cmd"] == "off":
-        s1.powerOff()
-    elif request.json["cmd"] == "autoOffMinutes":
-        s1.autoOffTimeSeconds = int(request.json["time"]) * 60
+    if "cmd" in request.json:
+        if request.json["cmd"] == "on":
+            if "boiler" in request.json and request.json["boiler"] == "off":
+                s1.powerOn(boilerState=BoilerState.OFF)
+            else:
+                s1.powerOn()
+        elif request.json["cmd"] == "off":
+            s1.powerOff()
+        elif request.json["cmd"] == "autoOffMinutes":
+            if "time" in request.json:
+                s1.autoOffTimeSeconds = int(request.json["time"]) * 60
+            else:
+                return "No Time given for autoOffMinutes `time` key required"
 
-    return "OK"
+        return "OK"
+    else:
+        return "No cmd given"
 
 
 @app.route("/vivaldi")
