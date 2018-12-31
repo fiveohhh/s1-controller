@@ -19,6 +19,8 @@ def cmd():
             s1.powerOn()
     elif request.json["cmd"] == "off":
         s1.powerOff()
+    elif request.json["cmd"] == "autoOffMinutes":
+        s1.autoOffTimeSeconds = int(request.json["time"]) * 60
 
     return "OK"
 
@@ -28,8 +30,10 @@ def state():
     state = {}
     state["boiler"] = str(s1.boilerState).split(".")[1]
     state["machine"] = str(s1.machineState).split(".")[1]
+    state["autoOffMinutes"] = s1.autoOffTimeSeconds / 60
     if s1.startTime != None:
         state["uptime"] = (datetime.now() - s1.startTime).total_seconds()
+        state["uptimeMinutes"] = (datetime.now() - s1.startTime).total_seconds() / 60
 
     return json.dumps(state)
 

@@ -64,6 +64,8 @@ class S1:
         self._kill = False
         self._running = False
         self.startTime = None
+        # set to zero to disable auto off
+        self.autoOffTimeSeconds = 60 * 60 * 2  # 2 hours
 
     def run(self):
         logger.info("Starting...")
@@ -101,6 +103,16 @@ class S1:
                     if self.boilerState != BoilerState.OFF:
                         logger.info("Boiler turned off")
                         self.boilerState = BoilerState.OFF
+
+            if (
+                (self.autoOffTimeSeconds > 0)
+                and self.startTime != None
+                and (
+                    (datetime.now() - self.startTime).total_seconds()
+                    > self.autoOffTimeSeconds
+                )
+            ):
+                self.powerOff()
 
             # check and update things
             time.sleep(0.1)
