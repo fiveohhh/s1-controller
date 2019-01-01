@@ -106,9 +106,7 @@ class S1:
                         log = {
                             "startTime": str(self.startTime),
                             "onTime": (datetime.now() - self.startTime).total_seconds(),
-                            "boilerOnTime": (
-                                datetime.now() - self.boilerRunTime
-                            ).total_seconds(),
+                            "boilerOnTime": self.boilerRunTime,
                             "boilerCycles": self.boilerCycles,
                             "wasAutoShutOff": autoOff,
                         }
