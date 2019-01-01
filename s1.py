@@ -118,7 +118,7 @@ class S1:
                                 (datetime.now() - self.startTime).total_seconds() / 60,
                                 2,
                             ),
-                            "boilerOnTimeMinutes": round(self.boilerRunTime / 6, 2),
+                            "boilerOnTimeMinutes": round(self.boilerRunTime / 60, 2),
                             "boilerCycles": self.boilerCycles,
                             "wasAutoShutOff": autoOff,
                         }
