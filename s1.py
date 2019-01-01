@@ -1,6 +1,10 @@
 import threading
 import time
 
+from google.cloud import firestore
+
+db = firestore.Client()
+
 import RPi.GPIO as GPIO
 
 from collections import deque
@@ -104,13 +108,17 @@ class S1:
                         self.machineState = MachineState.OFF
                         # log cycle summary
                         log = {
-                            "startTime": str(self.startTime),
-                            "onTime": (datetime.now() - self.startTime).total_seconds(),
-                            "boilerOnTime": self.boilerRunTime,
+                            "startTime": self.startTime,
+                            "onTimeSeconds": (
+                                datetime.now() - self.startTime
+                            ).total_seconds(),
+                            "boilerOnTimeSeconds": self.boilerRunTime,
                             "boilerCycles": self.boilerCycles,
                             "wasAutoShutOff": autoOff,
                         }
                         logger.info(log)
+                        db.collection(u"cycle-summary").document().set(log)
+
                         self.startTime = None
                         self.boilerCycles = 0
                         self.boilerRunTime = 0
