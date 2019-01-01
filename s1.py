@@ -12,14 +12,15 @@ from enum import Enum
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
-handler = RotatingFileHandler("s1-logs.log", maxBytes=2000000, backupCount=2)
-logger.addHandler(handler)
+if not len(logger.handlers):
+    handler = RotatingFileHandler("s1-logs.log", maxBytes=2000000, backupCount=2)
+    logger.addHandler(handler)
 
-formatter = logging.Formatter(
-    fmt="%(asctime)s %(levelname)-8s %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
-)
+    formatter = logging.Formatter(
+        fmt="%(asctime)s %(levelname)-8s %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+    )
 
-handler.setFormatter(formatter)
+    handler.setFormatter(formatter)
 
 logger.setLevel(logging.INFO)
 
