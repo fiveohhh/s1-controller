@@ -83,6 +83,7 @@ class S1:
         self._running = True
         while not self._kill:
             autoOff = False
+            logs = []
             if (
                 (self.autoOffTimeSeconds > 0)
                 and self.startTime != None
@@ -109,15 +110,20 @@ class S1:
                         # log cycle summary
                         log = {
                             "startTime": self.startTime,
-                            "onTimeSeconds": (
-                                datetime.now() - self.startTime
-                            ).total_seconds(),
-                            "boilerOnTimeSeconds": self.boilerRunTime,
+                            "onTimeSeconds": int(
+                                (datetime.now() - self.startTime).total_seconds()
+                            ),
+                            "boilerOnTimeSeconds": int(self.boilerRunTime),
+                            "onTimeMinutes": round(
+                                (datetime.now() - self.startTime).total_seconds() / 60,
+                                2,
+                            ),
+                            "boilerOnTimeMinutes": round(self.boilerRunTime / 6, 2),
                             "boilerCycles": self.boilerCycles,
                             "wasAutoShutOff": autoOff,
                         }
                         logger.info(log)
-                        db.collection(u"cycle-summary").document().set(log)
+                        logs.append(log)
 
                         self.startTime = None
                         self.boilerCycles = 0
@@ -159,6 +165,9 @@ class S1:
                                 ).total_seconds()
                             )
                             self.boilerStartTime = None
+
+            for log in logs:
+                db.collection(u"cycle-summary").document().set(log)
 
             # check and update things
             time.sleep(0.1)
