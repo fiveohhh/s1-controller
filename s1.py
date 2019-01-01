@@ -67,6 +67,9 @@ class S1:
         self.startTime = None
         # set to zero to disable auto off
         self.autoOffTimeSeconds = 60 * 60 * 2  # 2 hours
+        self.boilerCycles = 0
+        self.boilerRunTime = 0
+        self.boilerStartTime = None
 
     def run(self):
         logger.info("Starting...")
@@ -75,6 +78,18 @@ class S1:
 
         self._running = True
         while not self._kill:
+            autoOff = False
+            if (
+                (self.autoOffTimeSeconds > 0)
+                and self.startTime != None
+                and (
+                    (datetime.now() - self.startTime).total_seconds()
+                    > self.autoOffTimeSeconds
+                )
+            ):
+                self.powerOff()
+                autoOff = True
+
             onstby_led_history.append(GPIO.input(ON_STBY_LED))
             logger.debug("on stby history: {}".format(onstby_led_history))
             if len(onstby_led_history) == 10:
@@ -87,7 +102,20 @@ class S1:
                     if self.machineState != MachineState.OFF:
                         logger.info("Machine turned off")
                         self.machineState = MachineState.OFF
+                        # log cycle summary
+                        log = {
+                            "startTime": str(self.startTime),
+                            "onTime": (datetime.now() - self.startTime).total_seconds(),
+                            "boilerOnTime": (
+                                datetime.now() - self.boilerRunTime
+                            ).total_seconds(),
+                            "boilerCycles": self.boilerCycles,
+                            "wasAutoShutOff": autoOff,
+                        }
+                        logger.info(log)
                         self.startTime = None
+                        self.boilerCycles = 0
+                        self.boilerRunTime = 0
 
             boiler_led_history.append(GPIO.input(BOILER_LED))
             logger.debug("boiler history: {}".format(boiler_led_history))
@@ -96,24 +124,32 @@ class S1:
                     if self.boilerState != BoilerState.ON_TO_TEMP:
                         logger.info("Boiler to temp")
                         self.boilerState = BoilerState.ON_TO_TEMP
+                        self.boilerCycles = self.boilerCycles + 1
+                        if self.boilerStartTime != None:
+                            self.boilerRunTime = (
+                                self.boilerRunTime
+                                + (
+                                    datetime.now() - self.boilerStartTime
+                                ).total_seconds()
+                            )
+                            self.boilerStartTime = None
                 elif sum(boiler_led_history) < 10:
                     if self.boilerState != BoilerState.ON_NOT_TO_TEMP:
                         logger.info("Boiler heating")
                         self.boilerState = BoilerState.ON_NOT_TO_TEMP
+                        self.boilerStartTime = datetime.now()
                 else:
                     if self.boilerState != BoilerState.OFF:
                         logger.info("Boiler turned off")
                         self.boilerState = BoilerState.OFF
-
-            if (
-                (self.autoOffTimeSeconds > 0)
-                and self.startTime != None
-                and (
-                    (datetime.now() - self.startTime).total_seconds()
-                    > self.autoOffTimeSeconds
-                )
-            ):
-                self.powerOff()
+                        if self.boilerStartTime != None:
+                            self.boilerRunTime = (
+                                self.boilerRunTime
+                                + (
+                                    datetime.now() - self.boilerStartTime
+                                ).total_seconds()
+                            )
+                            self.boilerStartTime = None
 
             # check and update things
             time.sleep(0.1)
