@@ -122,7 +122,7 @@ class S1:
                     if self.boilerState != BoilerState.ON_TO_TEMP:
                         # The led stays on for a little longer when it starts.  Let's
                         # not consider the boiler to temp if we started in the past few seconds
-                        if (datetime.now() - self.startTime).total_seconds() < 2:
+                        if (datetime.now() - self.startTime).total_seconds() > 2:
                             logger.info("Boiler to temp")
                             self.boilerState = BoilerState.ON_TO_TEMP
                             self.boilerCycles = self.boilerCycles + 1
