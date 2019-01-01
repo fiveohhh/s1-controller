@@ -51,7 +51,7 @@ def state():
 
 def main():
     s1.start()
-    app.run(debug=True, host="0.0.0.0")
+    app.run_simple(debug=True, host="0.0.0.0")
 
 
 if __name__ == "__main__":

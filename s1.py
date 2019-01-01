@@ -120,17 +120,20 @@ class S1:
             if len(boiler_led_history) == 10:
                 if sum(boiler_led_history) == 0:
                     if self.boilerState != BoilerState.ON_TO_TEMP:
-                        logger.info("Boiler to temp")
-                        self.boilerState = BoilerState.ON_TO_TEMP
-                        self.boilerCycles = self.boilerCycles + 1
-                        if self.boilerStartTime != None:
-                            self.boilerRunTime = (
-                                self.boilerRunTime
-                                + (
-                                    datetime.now() - self.boilerStartTime
-                                ).total_seconds()
-                            )
-                            self.boilerStartTime = None
+                        # The led stays on for a little longer when it starts.  Let's
+                        # not consider the boiler to temp if we started in the past few seconds
+                        if (datetime.now() - self.startTime).total_seconds() < 2:
+                            logger.info("Boiler to temp")
+                            self.boilerState = BoilerState.ON_TO_TEMP
+                            self.boilerCycles = self.boilerCycles + 1
+                            if self.boilerStartTime != None:
+                                self.boilerRunTime = (
+                                    self.boilerRunTime
+                                    + (
+                                        datetime.now() - self.boilerStartTime
+                                    ).total_seconds()
+                                )
+                                self.boilerStartTime = None
                 elif sum(boiler_led_history) < 10:
                     if self.boilerState != BoilerState.ON_NOT_TO_TEMP:
                         logger.info("Boiler heating")
