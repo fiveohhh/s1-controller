@@ -70,14 +70,14 @@ class S1:
 
     def run(self):
         logger.info("Starting...")
-        onstby_led_history = deque(maxlen=20)
-        boiler_led_history = deque(maxlen=20)
+        onstby_led_history = deque(maxlen=10)
+        boiler_led_history = deque(maxlen=10)
 
         self._running = True
         while not self._kill:
             onstby_led_history.append(GPIO.input(ON_STBY_LED))
             logger.debug("on stby history: {}".format(onstby_led_history))
-            if len(onstby_led_history) == 20:
+            if len(onstby_led_history) == 10:
                 if sum(onstby_led_history) == 0:
                     if self.machineState != MachineState.ON:
                         logger.info("Machine turned on")
@@ -91,12 +91,12 @@ class S1:
 
             boiler_led_history.append(GPIO.input(BOILER_LED))
             logger.debug("boiler history: {}".format(boiler_led_history))
-            if len(boiler_led_history) == 20:
+            if len(boiler_led_history) == 10:
                 if sum(boiler_led_history) == 0:
                     if self.boilerState != BoilerState.ON_TO_TEMP:
                         logger.info("Boiler to temp")
                         self.boilerState = BoilerState.ON_TO_TEMP
-                elif sum(boiler_led_history) < 20:
+                elif sum(boiler_led_history) < 10:
                     if self.boilerState != BoilerState.ON_NOT_TO_TEMP:
                         logger.info("Boiler heating")
                         self.boilerState = BoilerState.ON_NOT_TO_TEMP
