@@ -31,6 +31,12 @@ if not len(logger.handlers):
 
 logger.setLevel(logging.INFO)
 
+def logToCloud(text):
+    entry = {
+        timestamp: datetime.now().replace(tzinfo=central_tz),
+        entry:text
+    }
+    db.collection(u"log").document().set(entry)
 
 class BoilerState(Enum):
     OFF = 0
@@ -80,6 +86,7 @@ class S1:
 
     def run(self):
         logger.info("Starting...")
+        logToCloud("Starting")
         onstby_led_history = deque(maxlen=10)
         boiler_led_history = deque(maxlen=10)
 
@@ -104,11 +111,13 @@ class S1:
                 if sum(onstby_led_history) == 0:
                     if self.machineState != MachineState.ON:
                         logger.info("Machine turned on")
+                        logToCloud("Power on")
                         self.machineState = MachineState.ON
                         self.startTime = datetime.now()
                 else:
                     if self.machineState != MachineState.OFF:
                         logger.info("Machine turned off")
+                        logToCloud("Power off")
                         self.machineState = MachineState.OFF
                         # log cycle summary
                         log = {
@@ -141,6 +150,7 @@ class S1:
                         # not consider the boiler to temp if we started in the past few seconds
                         if (datetime.now() - self.startTime).total_seconds() > 2:
                             logger.info("Boiler to temp")
+                            logToCloud("Boiler to temp")
                             self.boilerState = BoilerState.ON_TO_TEMP
                             self.boilerCycles = self.boilerCycles + 1
                             if self.boilerStartTime != None:
@@ -154,11 +164,13 @@ class S1:
                 elif sum(boiler_led_history) < 10:
                     if self.boilerState != BoilerState.ON_NOT_TO_TEMP:
                         logger.info("Boiler heating")
+                        logToCloud("Boiler heating")
                         self.boilerState = BoilerState.ON_NOT_TO_TEMP
                         self.boilerStartTime = datetime.now()
                 else:
                     if self.boilerState != BoilerState.OFF:
                         logger.info("Boiler turned off")
+                        logToCloud("Boiler turned off")
                         self.boilerState = BoilerState.OFF
                         if self.boilerStartTime != None:
                             self.boilerRunTime = (
@@ -170,6 +182,7 @@ class S1:
                             self.boilerStartTime = None
 
             for log in logs:
+                logToCloud("Sending Summary")
                 db.collection(u"cycle-summary").document().set(log)
 
             # check and update things
@@ -179,6 +192,7 @@ class S1:
 
     def powerOn(self, boilerState=1):
         logger.info("Turning machine on")
+        logToCloud("Trying to turn machine on")
         if self.machineState == MachineState.OFF:
             GPIO.output(ON_OFF_BTN, GPIO.HIGH)
             time.sleep(3.5)
@@ -186,6 +200,7 @@ class S1:
 
             if boilerState == BoilerState.OFF:
                 logger.info("Turning boiler off")
+                logToCloud("Trying to turn machine of")
                 time.sleep(2)
                 # power off boiler
                 GPIO.output(BOILER_BTN, GPIO.HIGH)
@@ -197,12 +212,14 @@ class S1:
             boilerState == 0 and self.boilerState != BoilerState.OFF
         ):
             logger.info("Toggling boiler state")
+            logToCloud("Toggling boiler state")
             GPIO.output(BOILER_BTN, GPIO.HIGH)
             time.sleep(0.25)
             GPIO.output(BOILER_BTN, GPIO.LOW)
 
     def powerOff(self):
         logger.info("Powering off")
+        logToCloud("Powering off")
         GPIO.output(ON_OFF_BTN, GPIO.HIGH)
         time.sleep(0.25)
         GPIO.output(ON_OFF_BTN, GPIO.LOW)
