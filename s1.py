@@ -1,6 +1,9 @@
 import threading
 import time
 
+from pytz import timezone
+central_tz = timezone('US/Central')
+
 from google.cloud import firestore
 
 db = firestore.Client()
@@ -109,7 +112,7 @@ class S1:
                         self.machineState = MachineState.OFF
                         # log cycle summary
                         log = {
-                            "startTime": self.startTime,
+                            "startTime": self.startTime.replace(tzinfo=central_tz),
                             "onTimeSeconds": int(
                                 (datetime.now() - self.startTime).total_seconds()
                             ),
