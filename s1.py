@@ -2,7 +2,8 @@ import threading
 import time
 
 from pytz import timezone
-central_tz = timezone('US/Central')
+
+central_tz = timezone("US/Central")
 
 from google.cloud import firestore
 
@@ -31,12 +32,14 @@ if not len(logger.handlers):
 
 logger.setLevel(logging.INFO)
 
+
 def logToCloud(text):
-    entry = {
-        timestamp: datetime.now().replace(tzinfo=central_tz),
-        entry:text
-    }
-    db.collection(u"log").document().set(entry)
+    entry = {"timestamp": datetime.now().replace(tzinfo=central_tz), "entry": text}
+    try:
+        db.collection(u"log").document().set(entry)
+    except:
+        logger.info("error logging message: {}".format(entry))
+
 
 class BoilerState(Enum):
     OFF = 0
@@ -183,7 +186,10 @@ class S1:
 
             for log in logs:
                 logToCloud("Sending Summary")
-                db.collection(u"cycle-summary").document().set(log)
+                try:
+                    db.collection(u"cycle-summary").document().set(log)
+                except:
+                    logger.info("Error sending cycle summary: {}".format(log))
 
             # check and update things
             time.sleep(0.1)
