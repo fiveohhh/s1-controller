@@ -36,7 +36,7 @@ logger.setLevel(logging.INFO)
 def logToCloud(text):
     entry = {"timestamp": datetime.now().replace(tzinfo=central_tz), "entry": text}
     try:
-        db.collection(u"log").document().set(entry)
+        db.collection(u"logs").document().set(entry)
     except:
         logger.info("error logging message: {}".format(entry))
 
